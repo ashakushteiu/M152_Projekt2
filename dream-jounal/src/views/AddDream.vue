@@ -14,7 +14,10 @@
         <label for="description">Description:</label>
         <textarea id="description" v-model="dream.description" required></textarea>
       </div>
-      <button type="submit">Add Dream</button>
+      <div class="button-holder">
+        <button type="button" @click="cancelAdd">Cancel</button>
+        <button type="submit">Add Dream</button>
+      </div>
     </form>
   </div>
 </template>
@@ -24,6 +27,7 @@ export default {
   data() {
     return {
       dream: {
+        id: null,
         title: '',
         date: '',
         description: '',
@@ -32,13 +36,20 @@ export default {
   },
   methods: {
     submitDream() {
-      // Hier kannst du die Logik implementieren, um den Traum zu speichern
-      // Du kannst eine API-Anfrage durchführen oder auf eine lokale Datenquelle zugreifen
-      // Verwende die Daten aus 'dream' für den Speichervorgang
-      console.log('Dream submitted:', this.dream);
+      // Generieren einer eindeutigen ID
+      const dreamId = Date.now();
       
-      // Hier kannst du den Benutzer auf eine andere Seite weiterleiten, z.B. zur Dreams-Seite
-      // Du kannst die 'router.push()' Methode verwenden, um zur entsprechenden Route zu navigieren
+      // Aktualisieren der Dream-Eigenschaft mit der generierten ID
+      this.dream.id = dreamId;
+
+      // Speichern der Daten im LocalStorage
+      const dreams = JSON.parse(localStorage.getItem('dreams')) || [];
+      dreams.push(this.dream);
+      localStorage.setItem('dreams', JSON.stringify(dreams));
+      
+      this.$router.push('/dreams');
+    },
+    cancelAdd() {
       this.$router.push('/dreams');
     },
   },
@@ -48,7 +59,7 @@ export default {
 <style scoped>
 .add-dream {
   text-align: center;
-  margin-top: 100px;
+  margin-top: 20px;
 }
 
 h1 {
@@ -56,37 +67,9 @@ h1 {
   margin-bottom: 20px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
 div {
-  margin-bottom: 10px;
-}
-
-label {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-input[type="text"],
-input[type="date"],
-textarea {
-  padding: 5px;
   width: 100%;
-  box-sizing: border-box;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  max-width: 300px;
+  margin: 0 auto 20px;
 }
 </style>

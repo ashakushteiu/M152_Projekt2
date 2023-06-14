@@ -1,34 +1,44 @@
 <template>
   <div class="dream-details">
     <h1>{{ dream.title }}</h1>
-    <p>{{ dream.date }}</p>
-    <p>{{ dream.description }}</p>
+    <div>
+      <p>{{ dream.description }}</p>
+      <p class="small-right">{{ dream.date }}</p>
+    </div>
+    <button type="button" @click="backToDreams">Back</button>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      dream: {},
-    };
-  },
+ data() {
+  return {
+    dream: {
+      id: null,
+      title: '',
+      date: '',
+      description: '',
+    },
+  };
+},
   created() {
-    // Hier kannst du den Traum anhand der ID aus den Routenparametern abrufen und in 'dream' speichern
     const dreamId = this.$route.params.id;
     this.getDreamDetails(dreamId);
   },
   methods: {
     getDreamDetails(dreamId) {
-      // Hier kannst du die Logik implementieren, um die Details des Traums von deiner Datenquelle abzurufen
-      // Du kannst eine API-Anfrage durchführen oder auf eine lokale Datenquelle zugreifen
-      // Setze dann die 'dream'-Daten entsprechend
-      this.dream = {
-        id: dreamId,
-        title: 'Dream ' + dreamId,
-        date: '2023-05-24',
-        description: 'This is the description of Dream ' + dreamId,
-      };
+      const dreams = JSON.parse(localStorage.getItem('dreams')) || [];
+      const dreamIdNumber = parseInt(dreamId);
+      const dream = dreams.find(dream => dream.id === dreamIdNumber);
+
+      if (dream) {
+        this.dream = dream;
+      } else {
+        console.error(`Dream with ID ${dreamId} not found.`);
+      }
+    },
+    backToDreams() {
+      this.$router.push('/dreams');
     },
   },
 };
@@ -37,16 +47,31 @@ export default {
 <style scoped>
 .dream-details {
   text-align: center;
-  margin-top: 100px;
+  margin-top: 20px;
 }
 
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
+.dream-details div {
+    display: grid;
+    grid-template-rows: minmax(200px, auto) 14px;
+    grid-template-columns: 1fr;
+    background: #f3dace;
+    width: calc(100% - 40px);
+    max-width: 500px;
+    margin: 0 auto 20px;
+    border-radius: 15px;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
 }
 
-p {
-  font-size: 16px;
-  margin-bottom: 10px;
+.dream-details div p {
+  margin: 0;
+}
+
+.small-right {
+      text-align: right;
+    font-size: 12px;
+    opacity: 0.5;
 }
 </style>

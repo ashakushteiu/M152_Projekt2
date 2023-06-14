@@ -3,6 +3,7 @@ import Home from '../views/Home.vue';
 import Dreams from '../views/Dreams.vue';
 import DreamDetails from '../views/DreamDetails.vue';
 import AddDream from '../views/AddDream.vue';
+import EditDream from '../views/EditDream.vue';
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/add-dream',
     name: 'AddDream',
     component: AddDream,
+  },
+  {
+    path: '/edit-dream/:id',
+    name: 'EditDream',
+    component: EditDream,
   },
 ];
 
